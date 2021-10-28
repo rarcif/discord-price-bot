@@ -1,6 +1,6 @@
+import os
 import discord
 import requests
-from replit import db
 from keep_alive import keep_alive
 
 # discord commands
@@ -8,23 +8,11 @@ from keep_alive import keep_alive
     # !price  prints current price
 
 # variables
-token = "crypto-com-chain" # CRO token variable 
-
-# getting crypto data 
-def getData(crypto):
-  URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd' # crypto data endpoint
-  req = requests.get(url = URL) # request url to fetch data
-  data = req.json() # convert into json payload
-  # print(data) 
-
-  # putting the crypto data into db
-  for i in range(len(data)):
-    db[data[i]['id']] = data[i]['current_price']
-
-  if crypto in db.keys(): 
-    return db[crypto]
-  else:
-    return None
+coin = "crypto-com-chain" # coin ID - coincecko
+currency = "usd" # currency conversion
+endpoint = f"https://api.coingecko.com/api/v3/simple/price?ids={coin}&vs_currencies={currency}" # endpoint - coingecko
+req = requests.get(url = endpoint) # request endpoint data
+data = req.json()[coin][currency] # convert data into json
 
 # send discord notificaiton to a channel
 async def sendMessage(message):
@@ -51,9 +39,9 @@ async def on_message(message):
 
   # list current price 
   if message.content.lower() == "!price":
-    await message.channel.send(f'The current price of CRO is: {getData(token)} USD')
+    await message.channel.send(f'The current price of CRO is: {data}')
 
-keep_alive()
+keep_alive() # keep server alive
 
-BOT_TOKEN = 'YOUR_DISCORD_BOT_TOKEN'
+BOT_TOKEN = os.environ['DISCORD_BOT_TOKEN']
 client.run(BOT_TOKEN)
