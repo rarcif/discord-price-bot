@@ -56,7 +56,7 @@ async def on_message(message):
 
   # list commands
   if message.content.startswith('!help'):
-    await message.channel.send('Command List: \n [!help] - prints the list of commands \n [!price] - prints the current CRO price \n [!tvl] - prints the total value locked'')
+    await message.channel.send('Command List: \n [!help] - prints the list of commands \n [!price] - prints the current CRO price \n [!tvl] - prints the total value locked')
 
   # list current price 
   if message.content.lower() == "!price":
